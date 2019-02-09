@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bird</title>    
+    <link href="bootstrap-3.3.0/dist/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap-3.3.0/dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/wizard.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+</head>
+<body>
+    <div class="page-header" style="text-align: center;">
+        <h1>Birth</h1>
+    </div>
+    <div class="container">
+        <div class="row">
+            <br>
+            <div class="col-md-4">
+            <iframe src="https://giphy.com/embed/AAn1TeM1E9WVO" width="370" height="360" frameBorder="0" class="giphy-embed"  >
+            </iframe>
+            </div>
+            <div class="col-md-8">
+                <div class="wizard">
+            <div class="wizard-inner">
+                <div class="connecting-line">
+                </div>
+                <ul class="nav nav-tabs" role="tablist">
+
+                    <li role="presentation" class="active">
+                        <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
+                            <span class="round-tab">
+                                <i class="glyphicon glyphicon-folder-open"></i>
+                            </span>
+                        </a>
+                    </li>
+
+                    <li role="presentation" class="disabled">
+                        <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
+                            <span class="round-tab">
+                                <i class="glyphicon glyphicon-pencil"></i>
+                            </span>
+                        </a>
+                    </li>
+
+                    <li role="presentation" class="disabled">
+                        <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
+                            <span class="round-tab">
+                                <i class="glyphicon glyphicon-picture"></i>
+                            </span>
+                        </a>
+                    </li>
+
+                    <li role="presentation" class="disabled">
+                        <a href="#complete" data-toggle="tab" aria-controls="complete" role="tab" title="Complete">
+                            <span class="round-tab">
+                                <i class="glyphicon glyphicon-ok"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>      
+                </div>
+            <form enctype="multipart/form-data" action="../proxy/subir.php" method="POST">
+                <!-- MAX_FILE_SIZE debe preceder al campo de entrada del fichero -->
+                <input type="hidden" name="MAX_FILE_SIZE" value="100000" />
+                <input type="text" id="a" name="nombreBD" placeholder="Nombre de la base" required />
+                <!-- El nombre del elemento de entrada determina el nombre en el array $_FILES -->
+                Enviar este fichero: <input name="miFile" type="file" />
+                <input type="submit" value="Enviar fichero" />
+            </form>
+            </div>         
+        </div>
+    </div>
+    <!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Felicidades, es un niñx</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <iframe src="https://giphy.com/embed/oEzxVEo2gvw76" width="480" height="360" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="page-header" >   
+    </div>
+    <br>
+    <h3 style="text-align: center;"><a href="https://www.facebook.com/Birth-191038648341128/" target="_blank">Contactanos</a></h3>
+    <script type="text/javascript">
+        function leerArchivo(e) {
+          var archivo = e.target.files[0];
+          if (!archivo) {
+            return;
+          }
+          var lector = new FileReader();  
+          lector.onload = function(e) {
+            var contenido = e.target.result;
+            mostrarContenido(contenido);
+          };       
+          lector.readAsText(archivo);
+        }
+
+        function mostrarContenido(contenido) {
+          var elemento = document.getElementById('contenido-archivo');
+          elemento.innerHTML = contenido;
+         
+        }
+        function mostrarContenido2(contenido) {
+          var elemento = document.getElementById('contenido-archivo2');
+          elemento.innerHTML = contenido;
+        }
+       // document.getElementById('file-input').addEventListener('change', leerArchivo, false);
+
+        function enviarSQL() {
+            $.post( "../proxy/subir.php",$('#formulario').serialize()).done(function(result){
+                alert('Subio');
+            }).fail(function() {
+                alert( "error" );
+            });
+        }
+
+    $("#kilod").click(function(e) {
+
+    var a = $("#a").val();
+    var formData = new FormData();
+
+    var input = document.getElementById('file-input');
+    var file = input.files[0];
+
+    formData.append("nombreBD", a);
+    formData.append("userfile", file);
+
+    var request = new XMLHttpRequest();
+    request.open("POST", "../proxy/subir.php");
+    
+    request.send(formData);  
+    alert('ALGO');
+});
+    </script>
+</body>
+</html>
