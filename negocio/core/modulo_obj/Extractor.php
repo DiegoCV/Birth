@@ -20,10 +20,12 @@ class Extractor
 		foreach ($nombres as $key => $value) {
 			$set = $this->obtenerColumnas($value);
 			$atributos = array();
+			$pk = array();
 			for ($i = 0; $i < count($set); $i++) {
 				array_push($atributos,$set[$i]['Field']);
+				if($set[$i]['Key'] == "PRI") array_push($pk,$set[$i]['Field']);
         	}
-			array_push($entidades,new Entidad($value,$atributos));
+			array_push($entidades,new Entidad($value,$atributos,$pk));
 		}
 		return $entidades;
 	}

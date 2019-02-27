@@ -3,5 +3,5 @@
 
 	    public function cargarSql($sql);
 	    
-	    public function descargarProyecto($nombre);
+	    public function construirProyecto();
 	}

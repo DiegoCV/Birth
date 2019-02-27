@@ -6,7 +6,7 @@ class Escritor_Controladores
 {
 	private $nombre;
 	private $Nombre;
-	 private $extension;
+	private $extension;
 	//atributos en general
 	private $setAtributosCrear = NULL;
 
@@ -14,7 +14,7 @@ class Escritor_Controladores
 	{
 		$this->nombre = $nombre;
 		$this->Nombre = ucfirst($nombre);
-		     $this->extension = ".php";
+		$this->extension = ".php";
 	}
 
 	public function escribir($atributo){
@@ -25,24 +25,27 @@ class Escritor_Controladores
 
 		$this->setAtributosCrear .= "\${$this->nombre}->set".ucfirst($atributo)."(\$_POST['{$atributo}']);\n";
 	}
-	
-	public function escribirMetodoCrear(){
-		return "public function crear{$this->Nombre}(){\n\${$this->nombre} = new {$this->Nombre}();\n{$this->setAtributosCrear}
-		\${$this->nombre}Mapper = new {$this->Nombre}Mapper();\nreturn \${$this->nombre}Mapper->crear{$this->Nombre}(\${$this->nombre});\n}\n";
-	}
 
-	public function escribirMetodoListar(){
-		return "public function listar{$this->Nombre}(){\n\${$this->nombre}Mapper = new {$this->Nombre}Mapper();\nreturn \${$this->nombre}Mapper->listar{$this->Nombre}();\n}\n";
-	}
+    private function escribirControlador($tipo,$nombre){
+        return "public function $tipo(\$$nombre){\n\${$nombre}Mapper = new ".ucfirst($nombre)."Mapper();\nreturn \$$nombre"."Mapper->$tipo(\$$nombre);\n}\n";
+    }
 
-	public function obtenerClase(){
-		return "<?php \n class {$this->Nombre}Controller{\n{$this->escribirMetodoListar()} \n {$this->escribirMetodoCrear()} \n}";
-	}
+    public function obtenerClase($contenido) {
+        return "<?php \n include_once realpath('../mapper/".ucfirst($this->nombre)."Mapper.php'); \n 
+        class ".$this->nombre."Controller{ \n $contenido\n }?>";
+    }
+
+    public function getContenido() {
+        $contenido = $this->escribirControlador("insert",$this->nombre);
+        $contenido .= $this->escribirControlador("update",$this->nombre);
+        return $this->obtenerClase($contenido);
+    }
+
 
 	public function getNombre()
 	{
 		return $this->Nombre;
-	}
+	} 
 	
 	    function getExtension() {
         return $this->extension;

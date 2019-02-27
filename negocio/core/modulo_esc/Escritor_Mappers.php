@@ -46,7 +46,7 @@ class Escritor_Mappers
 
 	private function escribirMetodo_Listar(){
 		$nombre = ucfirst($this->nombre);
-		return "public function listar{$nombre}(){ \n {$this->getQueryListar()} \n {$this->getProcesoListar()} \n";
+		return "public function listar{$nombre}(){ \n {$this->getQueryListar()} \n {$this->getProcesoListar()} }\n";
 	}
 
 	private function getQueryListar(){
@@ -59,7 +59,24 @@ class Escritor_Mappers
 
 	private function escribirMetodo_crear(){
 		$nombre = ucfirst($this->nombre);
-		return "public function crear{$nombre}({$nombre} \${$this->nombre}){ \n \$sql = {$this->getQueryListar()}; \n \$sentencia = \$this->db->prepare(\$sql); \n {$this->bindParam_text} {$this->asignacionAtributos} \$sentencia->execute();\n }";
+		return "public function insert{$nombre}({$nombre} \${$this->nombre}){ \n 
+			\$sentencia = \$this->db->prepare(SqlQuery::getSQLInsertPreparado(\$$nombre));\n
+			\$parametros = SqlQuery::getArrayParametros(\$$nombre);\n
+			foreach (\$parametros as \$key => &\$val) { \n
+				\$sentencia->bindParam(\$key, \$val);\n}\n
+			\$sentencia->execute(); 
+      		return \$this->db->lastInsertId();\n }";
+	}
+
+	private function escribirMetodo_update(){
+		$nombre = ucfirst($this->nombre);
+		return "public function update{$nombre}({$nombre} \${$this->nombre}){ \n 
+			\$sentencia = \$this->db->prepare(SqlQuery::getSQLUpdatePreparado(\$$nombre));\n
+			\$parametros = SqlQuery::getArrayParametros(\$$nombre);\n
+			foreach (\$parametros as \$key => &\$val) { \n
+				\$sentencia->bindParam(\$key, \$val);\n}\n
+			\$sentencia->execute(); 
+      		return \$this->db->lastInsertId();\n }";
 	}
 
 	private function getQueryCrear(){
@@ -79,7 +96,11 @@ class Escritor_Mappers
 
 	public function obtenerClase(){
 		$entidad = ucfirst($this->nombre);
-		return "<?php \n class {$entidad}Mapper extends Mapper{ \n {$this->escribirMetodo_Listar()} \n {$this->escribirMetodo_crear()} \n}";
+		return "<?php \n class {$entidad}Mapper extends Mapper{ \n
+		 	{$this->escribirMetodo_Listar()} \n
+		  	{$this->escribirMetodo_crear()} \n
+		  	{$this->escribirMetodo_update()} \n
+		}";
 	}
 
 	function getNombre() {

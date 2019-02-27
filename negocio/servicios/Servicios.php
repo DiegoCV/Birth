@@ -18,25 +18,37 @@ class Servicios implements IServicios
 		$elevador->subirBD();
 	}
 
-	public function descargarProyecto($nombre){
-		$extractor = new Extractor($nombre);
+	public function construirProyecto(){
+		$extractor = new Extractor('talento_humano');
 		$escritor = new Escritor($extractor->obtenerEntidades());
         $secretario = new Secretario(); 
+        //Construyo Proxys
+        foreach ($escritor->getSetProxys() as $proxy) {
+            $secretario->transcribirProxy($proxy);
+        }  
+        //Construyo controladores
+        foreach ($escritor->getSetControladores() as $controlador) {
+            $secretario->transcribirControlador($controlador);
+        } 
 		//Construyo entidades
         foreach ($escritor->getSetEntidades() as $entidad) {
             $secretario->transcribirEntidad($entidad);
-        }                        
-		//Construyo controladores
-        foreach ($escritor->getSetControladores() as $controlador) {
-            $secretario->transcribirControlador($controlador);
-        }  
+        }                  
 		//Contruyo mappers
         foreach ($escritor->getSetMappers() as $mapper) {
             $secretario->transcribirMapper($mapper);
         } 
+        //copiarMapper
+        $secretario->copiarMapper();
+
+/*
+
         $ruta = dirname(__FILE__,3)."/dist/";
         $comp = new Compresor();
         $comp->comprimir($ruta,dirname(__FILE__,3),"dist.zip");
+
+    */
+
        /** header("Content-type: application/octet-stream");
         header("Content-disposition: attachment; filename=dist.zip");
         // leemos el archivo creado
